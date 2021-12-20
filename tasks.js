@@ -70,7 +70,11 @@ function hello(){
   console.log('hello!')
 }
 
-// show help
+/**
+ * Show help
+ * 
+ * @returns {void}
+ */
 function help(){
 console.log ( 
 `
