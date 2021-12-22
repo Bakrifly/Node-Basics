@@ -34,13 +34,14 @@ function startApp(name){
  * @returns {void}
  */
 function onDataReceived(text) {
-  if (text === 'quit\n' || text === 'exit\n') {
+  text = text.trim()
+  if (text === 'quit' || text === 'exit') {
     quit();
   }
-  else if(text === 'hello\n'){
-    hello();
+  else if(text.split(" ")[0] === 'hello' || text.split(" ")[0] === 'Hello' || text === 'hello' || text === 'Hello'){
+    hello(text);
   }
-  else if(text === 'help\n'){
+  else if(text === 'help'){
     help();
   }
   else{
@@ -66,8 +67,12 @@ function unknownCommand(c){
  *
  * @returns {void}
  */
-function hello(){
-  console.log('hello!')
+function hello(name){
+  if(name === "hello" || name === "Hello"){
+    console.log("well Hello There!")
+  } else {
+  console.log(name + "!")
+  }
 }
 
 /**
@@ -78,14 +83,16 @@ function hello(){
 function help(){
 console.log ( 
 `
-Help
---------------------------------
-commands-------------description
-
-hello----------------say hello!
-quit-----------------exit the application
-exit-----------------same effect as quit command
-help-----------------list available commands
+commands available
+ ----------------------------------------------------
+'                                                    '
+' command--------------description                   '
+'                                                    '
+' hello----------------say hello!                    '
+' quit-----------------exit the application          '
+' exit-----------------same effect as quit command   '
+' help-----------------list available commands       '
+'----------------------------------------------------'
 `)
 }
 
