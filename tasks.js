@@ -54,6 +54,9 @@ function onDataReceived(text) {
   else if (text.split(" ")[0] === "remove"){
     removeItem(text)
   }
+  else if (text.split(" ")[0] === "edit"){
+    editItem(text)
+  }
   else if (text === "clear"){
     console.clear();
   }
@@ -167,6 +170,7 @@ function addItems(item){
 
 }
 // -------------------------------
+
 /*
 *
 *remove last item in list function
@@ -183,11 +187,50 @@ function removeItem(arg){
   }
   else{
   if(isNaN(index)){console.log("argumnt is not a Number")}
-  else{list.splice(index, 1);
-  console.log("list item number '"+ (index + 1) + "' was removed from the list!")}
+  else{
+    if(list.length < (index+1)){
+      console.log( "the item with index '"+ (index+1)  +"' does not exist")
+    }else{list.splice(index, 1);
+  console.log("list item number '"+ (index + 1) + "' was removed from the list!")}}
  }
-
 }
+// -----------------------------------------------
+
+/*
+*
+*edit items in the list function
+*/
+function editItem(arg){
+const input = arg.split(" ");
+
+
+// check if there is a index number or text after edit command
+  if(input.length === 1){console.log("\n-please input a text or number to update the last item in the list!")}
+
+  else if(isNaN(parseInt(input[1])) && input.length >= 2){
+    const [edit, ...newItem] = input;
+    list.pop();
+    list.push(newItem.join(" "))
+    console.log("last item in the list was modified")
+  }
+
+  // check if there is input after index
+  else if (input.length >= 2){
+    if (!isNaN(parseInt(input[1])) && input.length <= 2)
+   {console.log("no input provided to edit list item at index '"+ input [1]+"'!")}
+   
+  //  will edit the index specified line
+  // check if index has item
+   else if (!isNaN(parseInt(input[1])) && input.length >= 2)
+    { if(parseInt(input[1]) > list.length ){console.log("no item at index '"+ input [1]+"'!")}
+    else {const [edit, index, ...newItem] = input;
+    list[index-1] = newItem.join(' ')
+    console.log("line '" + index + "' was modified" )}
+  }
+ }
+}
+
+
 
 
 
