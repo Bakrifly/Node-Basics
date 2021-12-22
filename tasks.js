@@ -45,6 +45,15 @@ function onDataReceived(text) {
   else if(text === 'help'){
     help();
   }
+  else if (text === "ls" || text === "list"){
+    listItems()
+  }
+  else if (text.split(" ")[0] === 'add'){
+    addItems(text)
+  }
+  else if (text === "clear"){
+    console.clear();
+  }
   else{
     unknownCommand(text);
   }
@@ -89,14 +98,22 @@ function help(){
     argument: "[your name]",
     description:  "output: Hello [your name]!"},
     2:
+    {Command: "ls",
+    argument: "no argument available",
+    description:  "list all items in the list"},
+    3:
     {Command: "quit",
     argument: "no argument available",
     description:  "quit the application"},
-    3:
+    4:
     {Command: "exit",
     argument: "no argument available",
     description:  "exit the application"},
-    4:
+    5:
+    {Command: "clear",
+    argument: "no argument availabe" ,
+    description: "clear the console"},
+    6:
     {Command: "help",
     argument: "no argument available",
     description: "Show available Commands"},
@@ -105,21 +122,35 @@ function help(){
 
   console.table(Commands_available, );
 }
-// console.log ( 
-// `
-// commands available
-//  ----------------------------------------------------
-// '                                                    '
-// ' command--------------description                   '
-// '                                                    '
-// ' hello----------------say hello!                   '
-// ' quit-----------------exit the application          '
-// ' exit-----------------same effect as quit command   '
-// ' help-----------------list available commands       '
-// '----------------------------------------------------'
-// `)
-// }
 
+
+const list = ["buy milk", "get car from repair", "get some stuff from the super market"]
+
+/** 
+*
+*list function
+* @returns {void}
+*/
+function listItems(){
+  for (i=0; i< list.length; i++)
+  console.log((i+1)+":"+list[i]+".")
+}
+
+/*
+*
+*add function
+*/
+
+function addItems(item){
+
+  if(item === "add"){
+    console.log("no item specified with the add command!")
+  }
+  else {
+   item= item.substring(4);
+   list.push(item)}
+
+}
 
 /**
  * Exits the application
