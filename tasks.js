@@ -13,9 +13,9 @@ function startApp(name){
   process.stdin.resume();
   process.stdin.setEncoding('utf8');
   process.stdin.on('data', onDataReceived);
-  console.log(`Welcome to ${name}'s application!`)
+  console.log(`\n\nWelcome to ${name}'s application!`)
   console.log("--------------------")
-  console.log("type help to see availabe commands and get started")
+  console.log("type help to see availabe commands and get started\n")
 }
 
 
@@ -50,6 +50,9 @@ function onDataReceived(text) {
   }
   else if (text.split(" ")[0] === 'add'){
     addItems(text)
+  }
+  else if (text.split(" ")[0] === "remove"){
+    removeItem(text)
   }
   else if (text === "clear"){
     console.clear();
@@ -102,18 +105,27 @@ function help(){
     argument: "no argument available",
     description:  "list all items in the list"},
     3:
+    {Command: "add",
+    argument: "[item]",
+    description: "add [item] to the list"},
+    4:
+    {Command: "remove",
+    argument: "[index]",
+    description: "remove alone will remove the last item! or remove item at [index]"},
+
+    5:
     {Command: "quit",
     argument: "no argument available",
     description:  "quit the application"},
-    4:
+    6:
     {Command: "exit",
     argument: "no argument available",
     description:  "exit the application"},
-    5:
+    7:
     {Command: "clear",
     argument: "no argument availabe" ,
     description: "clear the console"},
-    6:
+    8:
     {Command: "help",
     argument: "no argument available",
     description: "Show available Commands"},
@@ -132,15 +144,17 @@ const list = ["buy milk", "get car from repair", "get some stuff from the super 
 * @returns {void}
 */
 function listItems(){
+  if(list.length == 0){console.log('Warning: list is empty!');}
+  else{
   for (i=0; i< list.length; i++)
   console.log((i+1)+":"+list[i]+".")
+ }
 }
 
 /*
 *
 *add function
 */
-
 function addItems(item){
 
   if(item === "add"){
@@ -148,9 +162,34 @@ function addItems(item){
   }
   else {
    item= item.substring(4);
-   list.push(item)}
+   list.push(item)
+   console.log("'"+item+"'" + " was added to the list!")}
 
 }
+// -------------------------------
+/*
+*
+*remove last item in list function
+*/
+function removeItem(arg){
+  index = parseInt(arg.split(" ")[1])-1
+
+  if(arg === "remove")
+  { if(list.length === 0){console.log("Nothing to Remove!")}
+  else 
+  {console.log("'"+list.at(-1)+"'"+" was Removed from the list")
+  list.pop();}
+
+  }
+  else{
+  if(isNaN(index)){console.log("argumnt is not a Number")}
+  else{list.splice(index, 1);
+  console.log("list item number '"+ (index + 1) + "' was removed from the list!")}
+ }
+
+}
+
+
 
 /**
  * Exits the application
