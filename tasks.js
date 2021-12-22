@@ -15,6 +15,7 @@ function startApp(name){
   process.stdin.on('data', onDataReceived);
   console.log(`Welcome to ${name}'s application!`)
   console.log("--------------------")
+  console.log("type help to see availabe commands and get started")
 }
 
 
@@ -69,7 +70,7 @@ function unknownCommand(c){
  */
 function hello(name){
   if(name === "hello" || name === "Hello"){
-    console.log("well Hello There!")
+    console.log("Hello!")
   } else {
   console.log(name + "!")
   }
@@ -81,20 +82,43 @@ function hello(name){
  * @returns {void}
  */
 function help(){
-console.log ( 
-`
-commands available
- ----------------------------------------------------
-'                                                    '
-' command--------------description                   '
-'                                                    '
-' hello----------------say hello!                    '
-' quit-----------------exit the application          '
-' exit-----------------same effect as quit command   '
-' help-----------------list available commands       '
-'----------------------------------------------------'
-`)
+
+   const Commands_available = { 
+    1:
+    {Command: "hello",
+    argument: "[your name]",
+    description:  "output: Hello [your name]!"},
+    2:
+    {Command: "quit",
+    argument: "no argument available",
+    description:  "quit the application"},
+    3:
+    {Command: "exit",
+    argument: "no argument available",
+    description:  "exit the application"},
+    4:
+    {Command: "help",
+    argument: "no argument available",
+    description: "Show available Commands"},
+  }
+
+
+  console.table(Commands_available, );
 }
+// console.log ( 
+// `
+// commands available
+//  ----------------------------------------------------
+// '                                                    '
+// ' command--------------description                   '
+// '                                                    '
+// ' hello----------------say hello!                   '
+// ' quit-----------------exit the application          '
+// ' exit-----------------same effect as quit command   '
+// ' help-----------------list available commands       '
+// '----------------------------------------------------'
+// `)
+// }
 
 
 /**
