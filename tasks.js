@@ -13,7 +13,7 @@ function startApp(name){
   process.stdin.resume();
   process.stdin.setEncoding('utf8');
   process.stdin.on('data', onDataReceived);
-  console.log(`\n\nWelcome to ${name}'s application!`)
+  console.log(`\n\nWelcome to ${name}'s ToDO application! --v1.0.0`)
   console.log("--------------------")
   console.log("type help to see availabe commands and get started\n")
 }
@@ -57,6 +57,12 @@ function onDataReceived(text) {
   else if (text.split(" ")[0] === "edit"){
     editItem(text)
   }
+  else if(text.split(" ")[0] === "check") {
+    check(text)
+  }
+  else if(text.split(" ")[0] === "uncheck") {
+    uncheck(text)
+  }
   else if (text === "clear"){
     console.clear();
   }
@@ -74,7 +80,7 @@ function onDataReceived(text) {
  * @returns {void}
  */
 function unknownCommand(c){
-  console.log('unknown command: "'+c.trim()+'"')
+  console.log(`unknown command: "${c.trim()}"`)
 }
 
 
@@ -87,7 +93,7 @@ function hello(name){
   if(name === "hello" || name === "Hello"){
     console.log("Hello!")
   } else {
-  console.log(name + "!")
+  console.log(`${name}!`)
   }
 }
 
@@ -115,20 +121,31 @@ function help(){
     {Command: "remove",
     argument: "[index]",
     description: "remove alone will remove the last item! or remove item at [index]"},
-
     5:
+    {Command: "edit",
+    argument: "[index]",
+    description:"edit last item or edit item at [index]"},
+    6:
+    {Command: "check",
+    argument: "[index]",
+    description:"mark item at [index] as done"},
+    7:
+    {Command: "uncheck",
+    argument: "[index]",
+    description:"mark item at [index] as not done"},
+    8:
     {Command: "quit",
     argument: "no argument available",
     description:  "quit the application"},
-    6:
+    9:
     {Command: "exit",
     argument: "no argument available",
     description:  "exit the application"},
-    7:
+    10:
     {Command: "clear",
     argument: "no argument availabe" ,
     description: "clear the console"},
-    8:
+    11:
     {Command: "help",
     argument: "no argument available",
     description: "Show available Commands"},
@@ -139,7 +156,10 @@ function help(){
 }
 
 
-const list = ["buy milk", "get car from repair", "get some stuff from the super market"]
+const list = [
+  {item:"buy milk", done: false},
+  {item:"get car from repair", done: true},
+  {item:"get some stuff from the super market",done: false}]
 
 /** 
 *
@@ -149,9 +169,14 @@ const list = ["buy milk", "get car from repair", "get some stuff from the super 
 function listItems(){
   if(list.length == 0){console.log('Warning: list is empty!');}
   else{
+    console.log('\nitem list')
+    console.log('-----------------------------')
   for (i=0; i< list.length; i++)
-  console.log((i+1)+":"+list[i]+".")
+  if (list[i].done === true)
+  {console.log(`${i + 1}: [\x1b[32m✓\x1b[0m]${list[i].item}`)}
+  else {console.log(`${i + 1}: [ ]${list[i].item}`)}
  }
+ console.log('-----------------------------\n')
 }
 
 /*
@@ -165,8 +190,8 @@ function addItems(item){
   }
   else {
    item= item.substring(4);
-   list.push(item)
-   console.log("'"+item+"'" + " was added to the list!")}
+   list.push({item: item, done: false})
+   console.log(`'${item}' was added to the list!`)}
 
 }
 // -------------------------------
@@ -176,22 +201,21 @@ function addItems(item){
 *remove last item in list function
 */
 function removeItem(arg){
-  index = parseInt(arg.split(" ")[1])-1
-
+  index = parseInt(arg.split(" ")[1])-1;
   if(arg === "remove")
   { if(list.length === 0){console.log("Nothing to Remove!")}
   else 
-  {console.log("'"+list.at(-1)+"'"+" was Removed from the list")
+  {console.log(`'${list[index].item}' was Removed from the list!`)
   list.pop();}
 
   }
   else{
-  if(isNaN(index)){console.log("argumnt is not a Number")}
+  if(isNaN(index)){console.log("argumnt is not a Number!")}
   else{
     if(list.length < (index+1)){
-      console.log( "the item with index '"+ (index+1)  +"' does not exist")
-    }else{list.splice(index, 1);
-  console.log("list item number '"+ (index + 1) + "' was removed from the list!")}}
+      console.log( `the item with index '${index+1}' does not exist!`)
+    }else{console.log(`'${list[index].item}' was removed from the list!`);
+    list.splice(index, 1);}}
  }
 }
 // -----------------------------------------------
@@ -203,35 +227,82 @@ function removeItem(arg){
 function editItem(arg){
 const input = arg.split(" ");
 
-
 // check if there is a index number or text after edit command
   if(input.length === 1){console.log("\n-please input a text or number to update the last item in the list!")}
 
   else if(isNaN(parseInt(input[1])) && input.length >= 2){
     const [edit, ...newItem] = input;
-    list.pop();
-    list.push(newItem.join(" "))
-    console.log("last item in the list was modified")
+    list[list.length -1].item = newItem.join(' ');
+    console.log("last item in the list was modified!")
   }
 
   // check if there is input after index
   else if (input.length >= 2){
     if (!isNaN(parseInt(input[1])) && input.length <= 2)
-   {console.log("no input provided to edit list item at index '"+ input [1]+"'!")}
+   {console.log(`no input provided to edit list item at index '${input[1]}'!`)}
    
   //  will edit the index specified line
   // check if index has item
    else if (!isNaN(parseInt(input[1])) && input.length >= 2)
-    { if(parseInt(input[1]) > list.length ){console.log("no item at index '"+ input [1]+"'!")}
+    { if(parseInt(input[1]) > list.length ){console.log(`no item at index '${input[1]}'!`)}
     else {const [edit, index, ...newItem] = input;
-    list[index-1] = newItem.join(' ')
-    console.log("line '" + index + "' was modified" )}
+    list[index-1].item = newItem.join(' ')
+    console.log(`item '${index}' was modified!` )}
   }
  }
 }
+// --------------------------
 
+/**
+ * 
+ * 
+ * check  function
+ * 
+ */
+function check(arg){
+ const input = arg.split(' ');
+ let index = parseInt(arg.split(" ")[1])-1;
 
+  if( input.length === 1 ) {console.log('please input an index!')}
 
+   else if( input.length === 2){
+  
+   if(isNaN(index)){console.log('please only input a number as the index!')} else if (list.length < (index +1)) {console.log("no item at specified location!")}
+ 
+   else { 
+     if(list[index].done === true){console.log('this item is already checked!')} else{
+     list[index].done = true;
+     console.log( `'${list[index].item}' got checked as done!`)
+     }  
+    }
+  } 
+}
+//------------------
+
+/**
+ * 
+ * 
+ * uncheck function
+ * 
+ */
+ function uncheck(arg){
+  const input = arg.split(' ');
+  let index = parseInt(arg.split(" ")[1])-1;
+ 
+   if( input.length === 1 ) {console.log('please input an index!')}
+ 
+    else if( input.length === 2){
+   
+    if(isNaN(index)){console.log('please only input a number as the index!')} else if (list.length < (index +1)) {console.log("no item at specified location!")}
+  
+    else { 
+      if(list[index].done === false){console.log('this item is already unchecked!')} else{
+      list[index].done = false;
+      console.log( `'${list[index].item}' got unchecked!`)
+      }  
+     }
+   } 
+ }
 
 
 /**
@@ -243,6 +314,8 @@ function quit(){
   console.log('Quitting now, goodbye!')
   process.exit();
 }
+
+
 
 // The following line starts the application
 startApp("Bakri Hmouda")
