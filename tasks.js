@@ -1,4 +1,6 @@
+let list = []
 
+  const processArg = (process.argv)
 /**
  * Starts the application
  * This is the function that is run when the app starts
@@ -12,12 +14,26 @@
 function startApp(name){
   process.stdin.resume();
   process.stdin.setEncoding('utf8');
-  process.stdin.on('data', onDataReceived);
+ 
   console.log(`\n\nWelcome to ${name}'s ToDO application! --v1.0.0`)
-  console.log("--------------------")
-  console.log("type help to see availabe commands and get started\n")
-}
+  console.log("====================================================\n")
+  console.log("type help to see availabe commands and get started")
+ 
+  // get data
+    if(processArg.length === 2)
+     {try 
+      {const getSavedData = JSON.parse(fs.readFileSync("./database.json", "utf8")); list = getSavedData} catch(err){console.log(err)}} 
+    
+      else if(processArg.length === 3) {
+        const [command, appName, fileName] = processArg;
+      try {const getSavedData = JSON.parse(fs.readFileSync(`./${fileName}.json`, "utf8")); list = getSavedData; console.log(`\n${fileName} was loaded successfully!\n`)} catch(err){console.log(`\n !---${fileName} ToDO does not exist so it was created--- \n`)}
+      }
+ 
+  process.stdin.on('data', onDataReceived);
 
+
+}
+const fs = require('fs');
 
 /**
  * Decides what to do depending on the data that was received
@@ -156,10 +172,6 @@ function help(){
 }
 
 
-const list = [
-  {item:"buy milk", done: false},
-  {item:"get car from repair", done: true},
-  {item:"get some stuff from the super market",done: false}]
 
 /** 
 *
@@ -205,7 +217,7 @@ function removeItem(arg){
   if(arg === "remove")
   { if(list.length === 0){console.log("Nothing to Remove!")}
   else 
-  {console.log(`'${list[index].item}' was Removed from the list!`)
+  {console.log(`'${list.at(-1).item}' was Removed from the list!`);
   list.pop();}
 
   }
@@ -312,6 +324,16 @@ function check(arg){
  */
 function quit(){
   console.log('Quitting now, goodbye!')
+//save data to file
+if (processArg.length === 2){ 
+fs.writeFileSync("database.json", JSON.stringify(list, null, 4,),);
+console.log("Data was saved to database.json successfully")} 
+
+else {
+  const [command, appName, fileName] = processArg;
+  fs.writeFileSync(`${fileName}.json`, JSON.stringify(list, null, 4,),);
+  console.log(`Data was saved to ${fileName}.json successfully`)
+}
   process.exit();
 }
 
