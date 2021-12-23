@@ -15,9 +15,9 @@ function startApp(name){
   process.stdin.resume();
   process.stdin.setEncoding('utf8');
  
-  console.log(`\n\nWelcome to ${name}'s ToDO application! --v1.0.0`)
-  console.log("====================================================\n")
-  console.log("type help to see availabe commands and get started")
+  console.log(`\x1b[44m\n\nWelcome to ${name}'s ToDO application! --v1.0.0`)
+  console.log("====================================================\n\x1b[0m")
+  console.log("\x1b[2mtype help to see availabe commands and get started\x1b[0m")
  
   // get data
     if(processArg.length === 2)
@@ -26,7 +26,7 @@ function startApp(name){
     
       else if(processArg.length === 3) {
         const [command, appName, fileName] = processArg;
-      try {const getSavedData = JSON.parse(fs.readFileSync(`./${fileName}.json`, "utf8")); list = getSavedData; console.log(`\n${fileName} was loaded successfully!\n`)} catch(err){console.log(`\n !---${fileName} ToDO does not exist so it was created--- \n`)}
+      try {const getSavedData = JSON.parse(fs.readFileSync(`./${fileName}.json`, "utf8")); list = getSavedData; console.log(`\n\x1b[34m${fileName}.json\x1b[32m was loaded successfully!\x1b[0m\n`)} catch(err){console.log(`\n !---${fileName}.json does not exist so it was created--- \n`)}
       }
  
   process.stdin.on('data', onDataReceived);
@@ -179,13 +179,13 @@ function help(){
 * @returns {void}
 */
 function listItems(){
-  if(list.length == 0){console.log('Warning: list is empty!');}
+  if(list.length == 0){console.log('\nWarning: list is empty!\n');}
   else{
-    console.log('\nitem list')
+    console.log(`\nitem list`)
     console.log('-----------------------------')
   for (i=0; i< list.length; i++)
   if (list[i].done === true)
-  {console.log(`${i + 1}: [\x1b[32m✓\x1b[0m]${list[i].item}`)}
+  {console.log(`${i + 1}: [\x1b[32m✓\x1b[0m]\x1b[32m${list[i].item}\x1b[0m`)}
   else {console.log(`${i + 1}: [ ]${list[i].item}`)}
  }
  console.log('-----------------------------\n')
@@ -323,17 +323,18 @@ function check(arg){
  * @returns {void}
  */
 function quit(){
-  console.log('Quitting now, goodbye!')
-//save data to file
+
+  //save data to file
 if (processArg.length === 2){ 
 fs.writeFileSync("database.json", JSON.stringify(list, null, 4,),);
-console.log("Data was saved to database.json successfully")} 
+console.log("\n \x1b[32mData was saved to \x1b[34mdatabase.json\x1b[32m successfully\x1b[0m\n")} 
 
 else {
   const [command, appName, fileName] = processArg;
   fs.writeFileSync(`${fileName}.json`, JSON.stringify(list, null, 4,),);
-  console.log(`Data was saved to ${fileName}.json successfully`)
+  console.log(`\n\x1b[32mData was saved to \x1b[34m${fileName}.json\x1b[32m successfully\x1b[0m\n`)
 }
+console.log('Quitting now, goodbye!')
   process.exit();
 }
 

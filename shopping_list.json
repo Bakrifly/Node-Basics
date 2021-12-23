@@ -1,0 +1,14 @@
+[
+    {
+        "item": "milk",
+        "done": false
+    },
+    {
+        "item": "bread",
+        "done": false
+    },
+    {
+        "item": "egg",
+        "done": false
+    }
+]
